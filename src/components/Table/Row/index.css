@@ -1,0 +1,8 @@
+.row:hover {
+    background-color: lightgrey;
+    cursor: pointer;
+}
+
+.chosen {
+    background-color: lightpink;
+}

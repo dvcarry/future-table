@@ -1,0 +1,15 @@
+.table_head {
+    display: inline-flex;
+    cursor: pointer;
+    align-items: center;
+}
+
+.table_head:hover .table_head_icon {
+    opacity: 100%;
+}
+
+.table_head_icon {
+    opacity: 0%;
+    font-size: 16px;
+}
+
