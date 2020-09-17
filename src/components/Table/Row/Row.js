@@ -1,6 +1,5 @@
 import React from 'react';
 import './index.css'
-import { Cell } from '../Cell/Cell';
 import { dataForTable } from '../../../data/data';
 
 export const Row = ({ rowData, chooseUser, chosenUser }) => {
@@ -19,10 +18,10 @@ export const Row = ({ rowData, chooseUser, chosenUser }) => {
     return (
         <tr className={classes.join(' ')} onClick={() => chooseUser(rowData.uid)}>
             {
-                dataForTable.map((item, i) => {
+                dataForTable.map(item => {
                     return (
                         <td
-                            key={i}
+                            key={rowData.uid + item}
                         >{rowData[item]}</td>
                     )
                 })

@@ -16,6 +16,7 @@ function App() {
   const [chosenUser, setChosenUser] = useState(null)
   const [loading, setLoading] = useState(false)
 
+
   const dataHandler = type => {
     setType(type)
   }
@@ -45,7 +46,7 @@ function App() {
 
   // const dataForPage = data && data.slice(page * rowsPerPage, rowsPerPage)
 
-  const dataForTable = data && data.map(({ address, description, ...rest }) => ({ ...rest }))
+  // const dataForTable = data && data.map(({ address, description, ...rest }) => ({ ...rest }))
 
   return (
     <div className="app">
@@ -55,24 +56,9 @@ function App() {
       />
       {
         type ? <Table type={type}/> : null
-      }
-      
+      }    
 
-      {/* {
-        loading
-          ? <Spinner />
-          : data
-            ? <Table
-              type={type}
-              // data={dataForTable}
-              // chooseUser={chooseUserHandler}
-              // chosenUser={chosenUser}
-            // sortData={sortData} 
-            // sortedColumn={sortedColumn}        
-            />
-            : null
-      } */}
-      {
+{
         chosenUser ? <Board user={data.filter(item => item.uid === chosenUser)[0]} /> : null
       }
 

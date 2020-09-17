@@ -15,7 +15,7 @@ export const Head = ({ text, sortData, sortedColumn }) => {
     return (
         <th>
             <span className='table_head' onClick={() => sortData(text)}>
-                {text}
+                {text.toUpperCase()}
                 <span className="material-icons table_head_icon" style={styleOfSorted}>
                     arrow_upward
                 </span>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Head } from './Head/Head';
 import { Pagination } from './Pagination/Pagination';
 import { Row } from './Row/Row';
@@ -6,25 +6,25 @@ import { Search } from './Search/Search';
 import { nanoid } from 'nanoid';
 import { fetchData } from '../../data/api';
 import { dataForTable } from '../../data/data';
+import { Board } from '../Board/Board';
+import { Spinner } from '../Spinner/Spinner';
 
 export const Table = ({ type }) => {
 
+    const [data, setData] = useState([])
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [sortedColumn, setSortedColumn] = useState({ column: '', sortBy: '' })
-    const [data, setData] = useState([])
-    console.log("Table -> data", data)
     const [chosenUser, setChosenUser] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [searchText, setSearchText] = useState(null)
 
 
     useEffect(() => {
-        // if (type) {
         setLoading(true)
         setChosenUser(null)
         const fetchDataByType = async () => {
             const newData = await fetchData(type)
-            console.log("fetchDataByType -> newData", newData)
             const dataWithId = newData.map(item => {
                 return {
                     uid: nanoid(),
@@ -35,35 +35,14 @@ export const Table = ({ type }) => {
             setLoading(false)
         }
         fetchDataByType()
-        // }
     }, [type])
 
-    const chooseUserHandler = id => {
-        setChosenUser(id)
-    }
-
-    const sortData = (column) => {
+    const sortColumnHandler = column => {
         let sortedBy = 'desc'
-        if (column === sortedColumn.column) {
+        if (sortedColumn.column === column) {
             sortedBy = sortedColumn.sortedBy === 'desc' ? 'asc' : 'desc'
         }
         setSortedColumn({ column, sortedBy })
-
-        const newData = data.sort((a, b) => {
-
-            let compare
-
-            if (b[column] < a[column]) {
-                compare = -1;
-            } else if (b[column] > a[column]) {
-                compare = 1;
-            } else {
-                compare = 0;
-            }
-            return sortedBy === 'asc' ? compare : -compare
-
-        })
-        // setData(newData)
     }
 
     const changePageHandler = (page, direction) => {
@@ -71,72 +50,88 @@ export const Table = ({ type }) => {
         setPage(newPage)
     }
 
-    const searchHandler = text => {
-        console.log("Table -> text", text, data)
-        const filtredData = data.filter(item => {
-            return item.firstName.toLowerCase().includes(text.toLowerCase()) ||
-                item.lastName.toLowerCase().includes(text.toLowerCase()) ||
-                item.email.toLowerCase().includes(text.toLowerCase())
-        })
+    const dataForRender = useMemo(() => {
+        let calcData = data
 
-        console.log("Table -> filtredData", filtredData)
+        if (searchText) {
+            calcData = calcData.filter(item => {
+                return item.firstName.toLowerCase().includes(searchText.toLowerCase()) ||
+                    item.lastName.toLowerCase().includes(searchText.toLowerCase()) ||
+                    item.email.toLowerCase().includes(searchText.toLowerCase())
+            })
+        }
 
-    }
+        if (sortedColumn.column) {
 
-    // const dataForPage = data && data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            const column = sortedColumn.column
+            const direction = sortedColumn.sortedBy === 'asc' ? 1 : -1
 
-    // const headers = data[0] && Object.keys(data[0]).map(item => {
-    //     if (item !== 'uid') {
-    //         return (
-    //             <Head
-    //                 text={item}
-    //                 key={item}
-    //                 sortData={sortData}
-    //                 sortedColumn={sortedColumn}
-    //             />
-    //         )
-    //     }
-    // })
+            calcData = data.sort((a, b) => {
+                let compare
+                if (b[column] < a[column]) {
+                    compare = -1;
+                } else if (b[column] > a[column]) {
+                    compare = 1;
+                } else {
+                    compare = 0;
+                }
+                return compare * direction
+            })
+        }
 
-    const rows = data.map(row => (
+        return calcData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+
+    }, [data, searchText, page, sortedColumn])
+
+    const rows = dataForRender.map(row => (
         <Row
             rowData={row}
             key={row.uid}
-            // chooseUser={chooseUser}
+            chooseUser={setChosenUser}
             chosenUser={chosenUser}
         />
     ))
 
+    const headers = dataForTable.map(item => {
+        return (
+            <Head
+                text={item}
+                key={item}
+                sortData={sortColumnHandler}
+                sortedColumn={sortedColumn}
+            />
+        )
+    })
+
     return (
         <>
-            <Search searchText={searchHandler} />
-            <table className="uk-table uk-table-small uk-table-divider uk-table-justify">
-                <thead>
-                    <tr>
-                        {/* {headers} */}
-                        {dataForTable.map(item => {
-                            return (
-                                <Head
-                                    text={item}
-                                    key={item}
-                                    sortData={sortData}
-                                    sortedColumn={sortedColumn}
-                                />
-                            )
-                        })}
-                    </tr>
-                </thead>
+            {
+                loading
+                    ? <Spinner />
+                    : <>
+                        <Search searchText={setSearchText} />
+                        <table className="uk-table uk-table-small uk-table-divider uk-table-justify">
+                            <thead>
+                                <tr>
+                                    {headers}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {rows}
+                            </tbody>
+                        </table>
+                        <Pagination
+                            page={page}
+                            rowsPerPage={rowsPerPage}
+                            datalength={data.length}
+                            changePage={changePageHandler}
+                        />
+                        {
+                            chosenUser ? <Board user={data.filter(item => item.uid === chosenUser)[0]} /> : null
+                        }
+                    </>
+            }
 
-                <tbody>                    
-                    {rows}
-                </tbody>
-            </table>
-            <Pagination
-                page={page}
-                rowsPerPage={rowsPerPage}
-                datalength={data.length}
-                changePage={changePageHandler}
-            />
         </>
     )
 }
