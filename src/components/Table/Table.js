@@ -3,13 +3,44 @@ import { Head } from './Head/Head';
 import { Pagination } from './Pagination/Pagination';
 import { Row } from './Row/Row';
 import { Search } from './Search/Search';
+import { nanoid } from 'nanoid';
+import { fetchData } from '../../data/api';
+import { dataForTable } from '../../data/data';
 
-export const Table = ({ data, chooseUser, chosenUser }) => {
+export const Table = ({ type }) => {
 
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [sortedColumn, setSortedColumn] = useState({ column: '', sortBy: '' })
+    const [data, setData] = useState([])
+    console.log("Table -> data", data)
+    const [chosenUser, setChosenUser] = useState(null)
+    const [loading, setLoading] = useState(false)
 
+
+    useEffect(() => {
+        // if (type) {
+        setLoading(true)
+        setChosenUser(null)
+        const fetchDataByType = async () => {
+            const newData = await fetchData(type)
+            console.log("fetchDataByType -> newData", newData)
+            const dataWithId = newData.map(item => {
+                return {
+                    uid: nanoid(),
+                    ...item
+                }
+            })
+            setData(dataWithId)
+            setLoading(false)
+        }
+        fetchDataByType()
+        // }
+    }, [type])
+
+    const chooseUserHandler = id => {
+        setChosenUser(id)
+    }
 
     const sortData = (column) => {
         let sortedBy = 'desc'
@@ -52,26 +83,26 @@ export const Table = ({ data, chooseUser, chosenUser }) => {
 
     }
 
-    const dataForPage = data && data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    // const dataForPage = data && data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 
-    const headers = data[0] && Object.keys(data[0]).map(item => {
-        if (item !== 'uid') {
-            return (
-                <Head
-                    text={item}
-                    key={item}
-                    sortData={sortData}
-                    sortedColumn={sortedColumn}
-                />
-            )
-        }
-    })
+    // const headers = data[0] && Object.keys(data[0]).map(item => {
+    //     if (item !== 'uid') {
+    //         return (
+    //             <Head
+    //                 text={item}
+    //                 key={item}
+    //                 sortData={sortData}
+    //                 sortedColumn={sortedColumn}
+    //             />
+    //         )
+    //     }
+    // })
 
-    const rows = dataForPage.map(row => (
+    const rows = data.map(row => (
         <Row
             rowData={row}
             key={row.uid}
-            chooseUser={chooseUser}
+            // chooseUser={chooseUser}
             chosenUser={chosenUser}
         />
     ))
@@ -82,11 +113,21 @@ export const Table = ({ data, chooseUser, chosenUser }) => {
             <table className="uk-table uk-table-small uk-table-divider uk-table-justify">
                 <thead>
                     <tr>
-                        {headers}
+                        {/* {headers} */}
+                        {dataForTable.map(item => {
+                            return (
+                                <Head
+                                    text={item}
+                                    key={item}
+                                    sortData={sortData}
+                                    sortedColumn={sortedColumn}
+                                />
+                            )
+                        })}
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody>                    
                     {rows}
                 </tbody>
             </table>
