@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Head } from './Head/Head';
 import { Pagination } from './Pagination/Pagination';
 import { Row } from './Row/Row';
+import { Search } from './Search/Search';
 
 export const Table = ({ data, chooseUser, chosenUser }) => {
-console.log("Table -> data", data)
 
     const [page, setPage] = useState(0)
-    console.log("Table -> page", page)
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [sortedColumn, setSortedColumn] = useState({ column: '', sortBy: '' })
+
 
     const sortData = (column) => {
         let sortedBy = 'desc'
@@ -38,19 +38,47 @@ console.log("Table -> data", data)
     const changePageHandler = (page, direction) => {
         const newPage = direction === 'plus' ? page + 1 : page - 1
         setPage(newPage)
-    }    
+    }
+
+    const searchHandler = text => {
+        console.log("Table -> text", text, data)
+        const filtredData = data.filter(item => {
+            return item.firstName.toLowerCase().includes(text.toLowerCase()) ||
+                item.lastName.toLowerCase().includes(text.toLowerCase()) ||
+                item.email.toLowerCase().includes(text.toLowerCase())
+        })
+
+        console.log("Table -> filtredData", filtredData)
+
+    }
 
     const dataForPage = data && data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-    console.log("Table -> dataForPage", dataForPage)
 
-    const headers = Object.keys(data[0]).map(item => <Head text={item} key={item} sortData={sortData} sortedColumn={sortedColumn} />)
-    const rows = dataForPage.map(row => <Row rowData={row} key={row.id} chooseUser={chooseUser} chosenUser={chosenUser}/>)
+    const headers = data[0] && Object.keys(data[0]).map(item => {
+        if (item !== 'uid') {
+            return (
+                <Head
+                    text={item}
+                    key={item}
+                    sortData={sortData}
+                    sortedColumn={sortedColumn}
+                />
+            )
+        }
+    })
 
+    const rows = dataForPage.map(row => (
+        <Row
+            rowData={row}
+            key={row.uid}
+            chooseUser={chooseUser}
+            chosenUser={chosenUser}
+        />
+    ))
 
-
-    console.log("Table -> rows", rows)
     return (
         <>
+            <Search searchText={searchHandler} />
             <table className="uk-table uk-table-small uk-table-divider uk-table-justify">
                 <thead>
                     <tr>
@@ -62,11 +90,11 @@ console.log("Table -> data", data)
                     {rows}
                 </tbody>
             </table>
-            <Pagination 
-            page={page} 
-            rowsPerPage={rowsPerPage} 
-            datalength={data.length} 
-            changePage={changePageHandler}
+            <Pagination
+                page={page}
+                rowsPerPage={rowsPerPage}
+                datalength={data.length}
+                changePage={changePageHandler}
             />
         </>
     )

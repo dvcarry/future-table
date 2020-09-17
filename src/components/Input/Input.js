@@ -1,4 +1,5 @@
 import React from 'react';
+import './index.css'
 
 export const Input = ({ onChangeHandler }) => {
 
@@ -7,10 +8,13 @@ export const Input = ({ onChangeHandler }) => {
     }
 
     return (
-        <select className="uk-select" onChange={changeHandler}>
-            <option></option>
-            <option type="text" value="small">Маленький</option>
-            <option type="text" value="big">Большой</option>
-        </select>
+        <div className='inputblock'>
+            <select className="uk-select inputblock_select" onChange={changeHandler}>
+                <option></option>
+                <option type="text" value="small">Маленький</option>
+                <option type="text" value="big">Большой</option>
+            </select>
+        </div>
+
     )
 }

@@ -4,22 +4,20 @@ import { Cell } from '../Cell/Cell';
 
 export const Row = ({ rowData, chooseUser, chosenUser }) => {
 
-    const cells = !!rowData && Object.values(rowData).map(cell => {    
-        if (cell instanceof Object) {
-            return <Cell text={Object.values(cell).join(' ')} />
-        } else {
-            return <Cell text={cell} />
-        }        
-    })
+    const cellsWithoutUniq = Object.entries(rowData).filter(item => {
+        if (item[0] !== 'uid') {
+            return item[1]
+        }
+    }).map((text, i) => <Cell key={i} text={text[1]} />)
 
     let classes = ['row']
-    if (rowData.id === chosenUser) {
+    if (rowData.uid === chosenUser) {
         classes.push('chosen')
     }
 
     return (
-        <tr className={classes.join(' ')} onClick={() => chooseUser(rowData.id)}>
-            {cells}
+        <tr className={classes.join(' ')} onClick={() => chooseUser(rowData.uid)}>
+            {cellsWithoutUniq}
         </tr>
     )
 }

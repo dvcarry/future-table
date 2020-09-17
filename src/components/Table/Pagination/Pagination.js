@@ -12,7 +12,7 @@ export const Pagination = ({ page, rowsPerPage, datalength, changePage }) => {
                 onClick={() => changePage(page, 'minus')}
                 disabled={page === 0}
             >
-                <span class="material-icons">
+                <span className="material-icons">
                     keyboard_arrow_left
             </span>
             </button>
@@ -20,7 +20,7 @@ export const Pagination = ({ page, rowsPerPage, datalength, changePage }) => {
                 onClick={() => changePage(page, 'plus')}
                 disabled={page === Math.floor(datalength / rowsPerPage)}
             >
-                <span class="material-icons">
+                <span className="material-icons">
                     keyboard_arrow_right
             </span>
             </button>

@@ -4,5 +4,5 @@
 }
 
 .chosen {
-    background-color: lightpink;
+    background-color: var(--color-main)
 }

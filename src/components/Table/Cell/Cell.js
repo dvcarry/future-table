@@ -1,7 +1,5 @@
 import React from 'react';
 
-export const Cell = ({ text }) => {
-    return (
-        <td>{text}</td>
-    )
-}
+export const Cell = ({ text }) => (
+        <td>{text}</td>    
+)
