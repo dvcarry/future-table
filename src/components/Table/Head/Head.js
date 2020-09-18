@@ -1,5 +1,5 @@
 import React from 'react';
-import './index.css'
+import './Head.css'
 
 export const Head = ({ text, sortData, sortedColumn }) => {
 
@@ -13,8 +13,10 @@ export const Head = ({ text, sortData, sortedColumn }) => {
     
 
     return (
-        <th>
-            <span className='table_head' onClick={() => sortData(text)}>
+        <th
+            className='table_head'
+        >
+            <span className='table_head_cell' onClick={() => sortData(text)}>
                 {text.toUpperCase()}
                 <span className="material-icons table_head_icon" style={styleOfSorted}>
                     arrow_upward

@@ -11,4 +11,98 @@ export const typeOfData = [
     }
 ]
 
-export const dataForTable = ['id', 'firstName', 'lastName', 'email', 'phone']
+
+
+export const dataDesc = [
+    {
+        id: 1,
+        name: 'id',
+        placeholder: 'Номер',      
+        showInTable: true,
+        showInForm: true,
+        parent: 0
+    },
+    {
+        id: 2,
+        name: 'firstName',
+        placeholder: 'Имя',  
+        showInTable: true,
+        showInForm: true,
+        parent: 0
+    },
+    {
+        id: 3,
+        name: 'lastName',
+        placeholder: 'Фамилия',  
+        showInTable: true,
+        showInForm: true,
+        parent: 0
+    },
+    {
+        id: 4,
+        name: 'email',
+        placeholder: 'email',  
+        showInTable: true,
+        showInForm: true,
+        parent: 0
+    },
+    {
+        id: 5,
+        name: 'phone',
+        placeholder: 'Телефон',  
+        showInTable: true,
+        showInForm: true,
+        parent: 0
+    },
+    {
+        id: 6,
+        name: 'address',
+        placeholder: 'Адрес',  
+        showInTable: false,
+        showInForm: false,
+        parent: 0
+    },
+    {
+        id: 7,
+        name: 'streetAddress',
+        placeholder: 'Улица',  
+        showInTable: false,
+        showInForm: true,
+        parent: 6
+    },
+    {
+        id: 8,
+        name: 'city',
+        placeholder: 'Город',  
+        showInTable: false,
+        showInForm: true,
+        parent: 6
+    },
+    {
+        id: 9,
+        name: 'state',
+        placeholder: 'Штат',  
+        showInTable: false,
+        showInForm: true,
+        parent: 6
+    },
+    {
+        id: 10,
+        name: 'zip',
+        placeholder: 'Индекс',  
+        showInTable: false,
+        showInForm: true,
+        parent: 6
+    },
+    {
+        id: 11,
+        name: 'description',
+        placeholder: 'Описание',  
+        showInTable: false,
+        showInForm: true,
+        parent: 0
+    }
+]
+
+export const dataForTable = dataDesc.filter(item => item.showInTable).map(data => data.name)
+// export const dataForTable = ['id', 'firstName', 'lastName', 'email', 'phone']

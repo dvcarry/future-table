@@ -5,23 +5,35 @@ import { Row } from './Row/Row';
 import { Search } from './Search/Search';
 import { nanoid } from 'nanoid';
 import { fetchData } from '../../data/api';
-import { dataForTable } from '../../data/data';
+import { dataForTable, dataDesc } from '../../data/data';
 import { Board } from '../Board/Board';
 import { Spinner } from '../Spinner/Spinner';
+import './Table.css'
+import { Modal } from './Modal/Modal';
+import { Button } from '../Button/Button';
+import { createObjFromData } from '../../data/helpers';
 
 export const Table = ({ type }) => {
 
     const [data, setData] = useState([])
+    console.log("Table -> data", data)
     const [page, setPage] = useState(0)
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [length, setLength] = useState(0)
     const [sortedColumn, setSortedColumn] = useState({ column: '', sortBy: '' })
     const [chosenUser, setChosenUser] = useState(null)
     const [loading, setLoading] = useState(false)
     const [searchText, setSearchText] = useState(null)
+    const [modal, setModal] = useState(false)
+    console.log("Table -> modal", modal)
+
+    const ROWS_PER_PAGE = 50
 
 
     useEffect(() => {
         setLoading(true)
+        setLength(0)
+        setSearchText(null)
+        setSortedColumn({ column: '', sortBy: '' })
         setChosenUser(null)
         const fetchDataByType = async () => {
             const newData = await fetchData(type)
@@ -50,7 +62,18 @@ export const Table = ({ type }) => {
         setPage(newPage)
     }
 
+    const addDataHandler = newData => {
+        const newRow = createObjFromData(newData, dataDesc)
+        const newRowWithUid = {
+            uid: nanoid(),
+            ...newRow
+        }
+        setData([newRowWithUid, ...data])
+        setModal(false)
+    }
+
     const dataForRender = useMemo(() => {
+
         let calcData = data
 
         if (searchText) {
@@ -60,13 +83,11 @@ export const Table = ({ type }) => {
                     item.email.toLowerCase().includes(searchText.toLowerCase())
             })
         }
-
         if (sortedColumn.column) {
-
             const column = sortedColumn.column
             const direction = sortedColumn.sortedBy === 'asc' ? 1 : -1
 
-            calcData = data.sort((a, b) => {
+            calcData = calcData.sort((a, b) => {
                 let compare
                 if (b[column] < a[column]) {
                     compare = -1;
@@ -78,8 +99,8 @@ export const Table = ({ type }) => {
                 return compare * direction
             })
         }
-
-        return calcData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        setLength(calcData.length)
+        return calcData.slice(page * ROWS_PER_PAGE, page * ROWS_PER_PAGE + ROWS_PER_PAGE)
 
     }, [data, searchText, page, sortedColumn])
 
@@ -109,8 +130,22 @@ export const Table = ({ type }) => {
                 loading
                     ? <Spinner />
                     : <>
-                        <Search searchText={setSearchText} />
-                        <table className="uk-table uk-table-small uk-table-divider uk-table-justify">
+                        <div className='tools'>
+                            <Search
+                                searchText={setSearchText}
+                            />
+                            <Button
+                                text='Добавить'
+                                customClass='primary'
+                                callback={() => setModal(true)}
+                            />
+                        </div>
+
+                        {
+                            modal ? <Modal showModal={setModal} addData={addDataHandler} /> : null
+                        }
+
+                        <table className="Table">
                             <thead>
                                 <tr>
                                     {headers}
@@ -122,8 +157,8 @@ export const Table = ({ type }) => {
                         </table>
                         <Pagination
                             page={page}
-                            rowsPerPage={rowsPerPage}
-                            datalength={data.length}
+                            rowsPerPage={ROWS_PER_PAGE}
+                            datalength={length}
                             changePage={changePageHandler}
                         />
                         {
@@ -131,7 +166,6 @@ export const Table = ({ type }) => {
                         }
                     </>
             }
-
         </>
     )
 }

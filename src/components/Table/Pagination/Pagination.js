@@ -1,9 +1,7 @@
 import React from 'react';
-import './index.css'
+import './Pagination.css'
 
 export const Pagination = ({ page, rowsPerPage, datalength, changePage }) => {
-
-
 
     return (
         <div className='pagination'>
@@ -24,7 +22,6 @@ export const Pagination = ({ page, rowsPerPage, datalength, changePage }) => {
                     keyboard_arrow_right
             </span>
             </button>
-
         </div>
     )
 }

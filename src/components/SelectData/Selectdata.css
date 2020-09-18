@@ -1,0 +1,13 @@
+.selectdata {
+    margin-bottom: 30px;
+    display: flex;
+    margin: auto auto;
+    padding: 10px;
+    outline-color: var(--color-main);
+}
+
+.inputblock_select {
+    width: 400px;
+    text-align: center;
+    
+}

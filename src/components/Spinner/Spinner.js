@@ -1,6 +1,6 @@
 import React from 'react';
-import './index.css'
+import './spinner.css'
 
 export const Spinner = () => (
-    <div class="lds-circle"><div></div></div>
+    <div className="lds-circle"><div></div></div>
 )

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import './index.css'
+import { Button } from '../../Button/Button';
+import './Search.css'
 
 export const Search = ({ searchText }) => {
 
@@ -15,18 +16,23 @@ export const Search = ({ searchText }) => {
 
 
     return (
-        <div className='search'>
+        <div className='Search'>
             <input
-                className="uk-input"
+                className="search_input"
                 value={text}
                 type="text"
-                placeholder="Input"
+                placeholder="Введите"
                 onChange={textHandler}
             />
-            <button
-                className="uk-button uk-button-primary"
+            <Button 
+                text='Найти'
+                customClass='primary'
+                callback={searchHandler}
+            />
+            {/* <button
+                className="button-primary"
                 onClick={searchHandler}
-            >Найти</button>
+            >Найти</button> */}
         </div>
 
     )

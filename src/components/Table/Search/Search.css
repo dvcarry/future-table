@@ -1,0 +1,19 @@
+.Search {
+    display: flex;
+}
+
+.search_input {
+    display: block;
+    border: none;
+    outline-color: var(--color-main);
+    padding: 10px;
+}
+
+.button-primary {
+    background-color: var(--color-main);
+    color: white;
+    border: none;
+    outline: none;
+    padding: 10px;
+    cursor: pointer;
+}

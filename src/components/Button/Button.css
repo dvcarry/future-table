@@ -1,0 +1,29 @@
+.Button {
+    border: transparent;
+    outline: transparent;
+    padding: 10px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+/* .Button:hover {
+    border: 1px solid black;
+} */
+
+.Button:hover:enabled {
+    box-shadow: 0 0 11px rgba(33,33,33,.4); 
+  }
+
+.primary {
+    background-color: var(--color-main);
+    color: white;
+}
+
+.default {
+    background-color: transparent;
+    border: 1px solid gray;
+}
+
+.disabled {
+    background-color: lightgray;
+}

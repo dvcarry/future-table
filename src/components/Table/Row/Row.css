@@ -1,3 +1,10 @@
+.row_cell {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid lightgray;
+    width:20%;
+}
+
 .row:hover {
     background-color: lightgrey;
     cursor: pointer;

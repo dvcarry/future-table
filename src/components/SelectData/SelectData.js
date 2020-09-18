@@ -1,6 +1,6 @@
 import React from 'react';
 import { typeOfData } from '../../data/data';
-import './index.css'
+import './Selectdata.css'
 
 export const SelectData = ({ onChangeHandler }) => {
 
@@ -9,8 +9,12 @@ export const SelectData = ({ onChangeHandler }) => {
     }
 
     return (
-        <select className="selectdata" onChange={changeHandler}>
-            <option selected disabled>Выберите данные</option>
+        <select
+            className="selectdata"
+            onChange={changeHandler}
+            defaultValue={'Выберите данные'}
+        >
+            <option disabled>Выберите данные</option>
             {
                 typeOfData.map(type => {
                     return <option
@@ -23,7 +27,5 @@ export const SelectData = ({ onChangeHandler }) => {
                 })
             }
         </select>
-
-
     )
 }
